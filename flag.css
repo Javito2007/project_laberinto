@@ -1,6 +1,8 @@
 body {
     text-align: center;
+    margin-top: 5%;
+    background-color: rgb(59, 57, 57);
 }
 #board {
-    background-color: rgb(6, 2, 63);
+    background-color: rgba(19, 30, 179, 0.425);
 }

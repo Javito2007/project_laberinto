@@ -74,22 +74,22 @@ function loadImages () {
     wallImage.src = "./wall.png" //imagen de caja
 
     draculaImage = new Image();
-    draculaImage.src = "./blueGhost.png";
+    draculaImage.src = "./dracula.png";
     agenteImage = new Image();
-    agenteImage.src = "./orangeGhost.png";
+    agenteImage.src = "./agente.png";
     ninjaImage = new Image();
-    ninjaImage.src = "./pinkGhost.png";
+    ninjaImage.src = "./ninja.png";
     robotImage = new Image();
-    robotImage.src = "./redGhost.png";
+    robotImage.src = "./robot.png";
 
     beresUpImage = new Image();
-    beresUpImage.src = "./pacmanUp.png";
+    beresUpImage.src = "./beresUp.png";
     beresDownImage = new Image();
-    beresDownImage.src = "./pacmanDown.png";
+    beresDownImage.src = "./beresDown.png";
     beresLeftImage = new Image();
-    beresLeftImage.src = "./pacmanLeft.png";
+    beresLeftImage.src = "./beresLeft.png";
     beresRightImage = new Image();
-    beresRightImage.src = "./pacmanRight.png";
+    beresRightImage.src = "./beresRight.png";
 }
 
 function loadMaps() {
@@ -154,13 +154,13 @@ function draw() {
     for (let wall of walls.values()) {
         context.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height);
     }
-    context.fillStyle = "white";
+    context.fillStyle = "yellow";
     for (let coin of coins.values()) {
         context.fillRect(coin.x, coin.y, coin.width, coin.height);
     }
 
     context.fillStyle = "white";
-    context.font = "14px sans-serif";
+    context.font = "22px sans-serif";
     if (gameOver){
         context.fillText("GAME OVER" + " " + String(score), tileSize/2, tileSize/2);
     }
