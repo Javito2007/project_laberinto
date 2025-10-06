@@ -46,7 +46,7 @@ const tileMap = [
     "X X              XX",
     "X XX   X r X  X   X",
     "X  X   XbpoX  X   X",
-    "XX XX  XXXXX  XXXXX",
+    "XX XX   XXXX  XXXXX",
     "X    X          X00",
     "X  X X XXXXXXXXXXXX",
     "X  X     X        X",
