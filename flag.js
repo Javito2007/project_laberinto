@@ -8,14 +8,14 @@ const boardHeight = rowCount * tileSize;
 let context;
 
 //imagenes
-let blueGhostImage;
-let orangeGhostImage;
-let pinkGhostImage;
-let redGhostImage;
-let pacmanUpImage;
-let pacmanDownImage;
-let pacmanLeftImage;
-let pacmanRightImage;
+let draculaImage;
+let agenteImage;
+let ninjaImage;
+let robotImage;
+let beresUpImage;
+let beresDownImage;
+let beresLeftImage;
+let beresRightImage;
 let wallImage;
 
 window.onload = function() {
@@ -26,15 +26,12 @@ window.onload = function() {
 
     loadImages();
     loadMaps();
-    // console.log(walls.size);
-    // console.log(foods.size);
-    // console.log(ghosts.size);
-    for (let ghost of ghosts.values()) {
+    for (let enemy of enemies.values()) {
         const newDirection = directions[Math.floor(Math.random()*4)];
-        ghost.updateDirection(newDirection);
+        enemy.updateDirection(newDirection);
     }
     update();
-    document.addEventListener("keyup", movePacman);
+    document.addEventListener("keyup", moveFlag);
 }
 
 const tileMap = [
@@ -62,9 +59,9 @@ const tileMap = [
 ];
 
 const walls = new Set();
-const foods = new Set();
-const ghosts = new Set();
-let pacman;
+const coins = new Set();
+const enemies = new Set();
+let flag;
 
 const directions = ['U', 'D', 'L', 'R'];
 let score = 0;
@@ -76,29 +73,29 @@ function loadImages () {
     wallImage = new Image ();
     wallImage.src = "./wall.png" //imagen de caja
 
-    blueGhostImage = new Image();
-    blueGhostImage.src = "./blueGhost.png";
-    orangeGhostImage = new Image();
-    orangeGhostImage.src = "./orangeGhost.png";
-    pinkGhostImage = new Image();
-    pinkGhostImage.src = "./pinkGhost.png";
-    redGhostImage = new Image();
-    redGhostImage.src = "./redGhost.png";
+    draculaImage = new Image();
+    draculaImage.src = "./blueGhost.png";
+    agenteImage = new Image();
+    agenteImage.src = "./orangeGhost.png";
+    ninjaImage = new Image();
+    ninjaImage.src = "./pinkGhost.png";
+    robotImage = new Image();
+    robotImage.src = "./redGhost.png";
 
-    pacmanUpImage = new Image();
-    pacmanUpImage.src = "./pacmanUp.png";
-    pacmanDownImage = new Image();
-    pacmanDownImage.src = "./pacmanDown.png";
-    pacmanLeftImage = new Image();
-    pacmanLeftImage.src = "./pacmanLeft.png";
-    pacmanRightImage = new Image();
-    pacmanRightImage.src = "./pacmanRight.png";
+    beresUpImage = new Image();
+    beresUpImage.src = "./pacmanUp.png";
+    beresDownImage = new Image();
+    beresDownImage.src = "./pacmanDown.png";
+    beresLeftImage = new Image();
+    beresLeftImage.src = "./pacmanLeft.png";
+    beresRightImage = new Image();
+    beresRightImage.src = "./pacmanRight.png";
 }
 
 function loadMaps() {
     walls.clear();
-    foods.clear();
-    ghosts.clear();
+    coins.clear();
+    enemies.clear();
 
     for (let r = 0; r < rowCount; r++) {
         for (let c = 0; c < columnCount; c++) {
@@ -113,27 +110,27 @@ function loadMaps() {
                 walls.add(wall);
             }
             else if (tileMapChar == "b") {
-                const ghost = new Block(blueGhostImage, x, y, tileSize, tileSize);
-                ghosts.add(ghost);
+                const enemy = new Block(draculaImage, x, y, tileSize, tileSize);
+                enemies.add(enemy);
             }
             else if (tileMapChar == "o") {
-                const ghost = new Block(orangeGhostImage, x, y, tileSize, tileSize);
-                ghosts.add(ghost);
+                const enemy = new Block(agenteImage, x, y, tileSize, tileSize);
+                enemies.add(enemy);
             }
             else if (tileMapChar == "p") {
-                const ghost = new Block(pinkGhostImage, x, y, tileSize, tileSize);
-                ghosts.add(ghost);
+                const enemy = new Block(ninjaImage, x, y, tileSize, tileSize);
+                enemies.add(enemy);
             }
             else if (tileMapChar == "r") {
-                const ghost = new Block(redGhostImage, x, y, tileSize, tileSize);
-                ghosts.add(ghost);
+                const enemy = new Block(robotImage, x, y, tileSize, tileSize);
+                enemies.add(enemy);
             }
             else if (tileMapChar == "P") {
-                pacman = new Block(pacmanRightImage, x, y, tileSize, tileSize);
+                flag = new Block(beresRightImage, x, y, tileSize, tileSize);
             }
             else if (tileMapChar == " ") {
-                const food = new Block(null, x + 14, y + 14, 4, 4);
-                foods.add(food);
+                const coin = new Block(null, x + 14, y + 14, 4, 4);
+                coins.add(coin);
             }
         }
     }
@@ -150,16 +147,16 @@ function update() {
 
 function draw() {
     context.clearRect(0, 0, board.width, board.height);
-    context.drawImage(pacman.image, pacman.x, pacman.y, pacman.width, pacman.height);
-    for (let ghost of ghosts.values()) {
-        context.drawImage(ghost.image, ghost.x, ghost.y, ghost.width, ghost.height);
+    context.drawImage(flag.image, flag.x, flag.y, flag.width, flag.height);
+    for (let enemy of enemies.values()) {
+        context.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
     }
     for (let wall of walls.values()) {
         context.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height);
     }
     context.fillStyle = "white";
-    for (let food of foods.values()) {
-        context.fillRect(food.x, food.y, food.width, food.height);
+    for (let coin of coins.values()) {
+        context.fillRect(coin.x, coin.y, coin.width, coin.height);
     }
 
     context.fillStyle = "white";
@@ -173,19 +170,19 @@ function draw() {
 }
 
 function move() {
-    pacman.x += pacman.velocityX;
-    pacman.y += pacman.velocityY;
+    flag.x += flag.velocityX;
+    flag.y += flag.velocityY;
 
     for (let wall of walls.values()) {
-        if (collision(pacman, wall)) {
-            pacman.x -= pacman.velocityX;
-            pacman.y -= pacman.velocityY;
+        if (collision(flag, wall)) {
+            flag.x -= flag.velocityX;
+            flag.y -= flag.velocityY;
             break;
         }
     }
 
-    for (let ghost of ghosts.values()) {
-        if (collision(pacman, ghost)) {
+    for (let enemy of enemies.values()) {
+        if (collision(flag, enemy)) {
             lives -= 1;
             if (lives == 0){
                 gameOver = true;
@@ -194,35 +191,35 @@ function move() {
             resetPositions();
         }
 
-        ghost.x += ghost.velocityX;
-        ghost.y += ghost.velocityY;
+        enemy.x += enemy.velocityX;
+        enemy.y += enemy.velocityY;
         for (let wall of walls.values()) {
-            if (collision(ghost, wall)) {
-                ghost.x -= ghost.velocityX;
-                ghost.y -= ghost.velocityY;
+            if (collision(enemy, wall)) {
+                enemy.x -= enemy.velocityX;
+                enemy.y -= enemy.velocityY;
                 const newDirection = directions[Math.floor(Math.random()*4)];
-                ghost.updateDirection(newDirection);
+                enemy.updateDirection(newDirection);
             }
         }
     }
 
-    let foodEaten = null;
-    for (let food of foods.values()) {
-        if (collision(pacman, food)) {
-            foodEaten = food;
+    let coinEaten = null;
+    for (let coin of coins.values()) {
+        if (collision(flag, coin)) {
+            coinEaten = coin;
             score += 10;
             break;
         }
     }
-    foods.delete(foodEaten);
+    coins.delete(coinEaten);
 
-    if (foods.size == 0) {
+    if (coins.size == 0) {
         loadMap();
         resetPositions();
     }
 }
 
-function movePacman(e) {
+function moveFlag(e) {
     if (gameOver){
         loadMap();
         resetPositions();
@@ -233,29 +230,29 @@ function movePacman(e) {
         return;
     }
     if (e.code == "ArrowUp" || e.code == "KeyW") {
-        pacman.updateDirection('U');
+        flag.updateDirection('U');
     }
     else if (e.code == "ArrowDown" || e.code == "KeyS") {
-        pacman.updateDirection('D');
+        flag.updateDirection('D');
     }
     else if (e.code == "ArrowLeft" || e.code == "KeyA") {
-        pacman.updateDirection('L');
+        flag.updateDirection('L');
     }
     else if (e.code == "ArrowRight" || e.code == "KeyD") {
-        pacman.updateDirection('R');
+        flag.updateDirection('R');
     }
 
-    if (pacman.direction == 'U'){
-        pacman.image = pacmanUpImage;
+    if (flag.direction == 'U'){
+        flag.image = beresUpImage;
     }
-    else if (pacman.direction == 'D'){
-        pacman.image = pacmanDownImage;
+    else if (flag.direction == 'D'){
+        flag.image = beresDownImage;
     }
-    else if (pacman.direction == 'L'){
-        pacman.image = pacmanLeftImage;
+    else if (flag.direction == 'L'){
+        flag.image = beresLeftImage;
     }
-    else if (pacman.direction == 'R'){
-        pacman.image = pacmanRightImage;
+    else if (flag.direction == 'R'){
+        flag.image = beresRightImage;
     }
 }
 
@@ -267,13 +264,13 @@ function collision(a, b) {
 }
 
 function resetPositions() {
-    pacman.reset();
-    pacman.velocityX = 0;
-    pacman.velocityY = 0;
-    for (let ghost of ghosts.values()){
-        ghost.reset();
+    flag.reset();
+    flag.velocityX = 0;
+    flag.velocityY = 0;
+    for (let enemy of enemies.values()){
+        enemy.reset();
         const newDirection = directions[Math.floor(Math.random()*4)];
-        ghost.updateDirection(newDirection);
+        enemy.updateDirection(newDirection);
     }
 }
 
