@@ -17,6 +17,7 @@ let beresDownImage;
 let beresLeftImage;
 let beresRightImage;
 let wallImage;
+let bombImage;
 
 window.onload = function() {
     board = document.getElementById("board");
@@ -36,19 +37,19 @@ window.onload = function() {
 
 const tileMap = [
     "XXXXXXXXXXXXXXXXXXX",
-    "X        X        X",
-    "X XX XXX X XXX XX X",
-    "X                 X",
-    "X XX X XXXXX X XX X",
-    "X    X       X    X",
-    "X XX XXXX X XX XX X",
-    "X X       X X   XXX",
-    "X XX X XXrX  X    X",
-    "X       bpo  X    X",
-    "XX XXX XXXXX X  X X",
-    "X    X       X    X",
-    "XX   X XXXXXXX X  X",
-    "X        X        X",
+    "X  X             WX",
+    "X  X XXXXXXXXXXXX X",
+    "X XX         X    X",
+    "X X  XXXXXXX XXXX X",
+    "X X        X      X",
+    "X X  XXXXXXXXXXX  X",
+    "X X              XX",
+    "X XX   X r X  X   X",
+    "X  X   XbpoX  X   X",
+    "XX XX  XXXXX  XXXXX",
+    "X    X          X00",
+    "X  X X XXXXXXXXXXXX",
+    "X  X     X        X",
     "X XX XXX   XXX XX X",
     "X  X     P     X  X",
     "XX X X XXXXX X X XX",
@@ -62,6 +63,7 @@ const walls = new Set();
 const coins = new Set();
 const enemies = new Set();
 let flag;
+const bombs = new Set();
 
 const directions = ['U', 'D', 'L', 'R'];
 let score = 0;
@@ -90,10 +92,14 @@ function loadImages () {
     beresLeftImage.src = "./beresLeft.png";
     beresRightImage = new Image();
     beresRightImage.src = "./beresRight.png";
+
+    bombImage = new Image();
+    bombImage.src = "./win.png"
 }
 
 function loadMaps() {
     walls.clear();
+    bombs.clear();
     coins.clear();
     enemies.clear();
 
@@ -132,8 +138,12 @@ function loadMaps() {
                 const coin = new Block(null, x + 14, y + 14, 4, 4);
                 coins.add(coin);
             }
+            if (tileMapChar == "W") {
+                const bomb = new Block(bombImage, x, y, tileSize, tileSize);
+                bombs.add(bomb);
         }
     }
+}
 }
 
 function update() {
@@ -158,6 +168,9 @@ function draw() {
     for (let coin of coins.values()) {
         context.fillRect(coin.x, coin.y, coin.width, coin.height);
     }
+    for (let bomb of bombs.values()) {
+        context.drawImage(bomb.image, bomb.x, bomb.y, bomb.width, bomb.height)
+    }
 
     context.fillStyle = "white";
     context.font = "22px sans-serif";
@@ -178,6 +191,12 @@ function move() {
             flag.x -= flag.velocityX;
             flag.y -= flag.velocityY;
             break;
+        }
+    }
+    
+    for (let bomb of bombs.values()){
+        if (collision(flag, bomb)){
+            window.open("https://es.stackoverflow.com/questions/374911/abrir-p%C3%A1gina-con-javascript")
         }
     }
 
