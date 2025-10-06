@@ -46,9 +46,9 @@ const tileMap = [
     "X X              XX",
     "X XX   X r X  X   X",
     "X  X   XbpoX  X   X",
-    "XX XX   XXXX  XXXXX",
+    "XX XX  XXXXX  XXXXX",
     "X    X          X00",
-    "X  X X XXXXXXXXXXXX",
+    "X  X X  XXXXXXXXXXX",
     "X  X     X        X",
     "X XX XXX   XXX XX X",
     "X  X     P     X  X",
@@ -196,7 +196,8 @@ function move() {
     
     for (let bomb of bombs.values()){
         if (collision(flag, bomb)){
-            window.open("https://es.stackoverflow.com/questions/374911/abrir-p%C3%A1gina-con-javascript")
+            window.open("ganaste/win.html")
+            break
         }
     }
 
