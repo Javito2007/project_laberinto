@@ -196,8 +196,8 @@ function move() {
     
     for (let bomb of bombs.values()){
         if (collision(flag, bomb)){
-            window.open("ganaste/win.html")
-            break
+            gameOver = true;
+            return;
         }
     }
 
