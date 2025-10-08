@@ -19,7 +19,7 @@ let beresRightImage;
 let wallImage;
 let bombImage;
 
-window.onload = function() {
+window.onload = function() {  //no sirve
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
